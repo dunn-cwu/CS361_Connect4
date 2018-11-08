@@ -151,8 +151,8 @@ int Game::makeMove(const int moveCol, const BoardField move)
 }
 
 // Returns true if the specified token was a game winning or game ending move.
-// This method works by checking tokens in all 8 directions from the given token,
-// looking for a sequence of 'ConnectLength' number of tokens.
+// This method works by checking tokens in 7 directions from the given token,
+// excluding directly upwards. It checks for a sequence of 'ConnectLength' number of tokens.
 // Returns false if no 'ConnectLength' sequences are found radiating from given token.
 bool Game::getWinner(GameState& stateOut, const int lastMoveX, const int lastMoveY)
 {
@@ -163,27 +163,27 @@ bool Game::getWinner(GameState& stateOut, const int lastMoveX, const int lastMov
 		return true;
 	}
 
-	// Construct arrays for all valid moves in 8 directions
-	const int dirX[8] = { -1, -1, -1,  0, 0,  1, 1, 1 };
-	const int dirY[8] = { -1,  0,  1, -1, 1, -1, 0, 1 };
+	// Construct arrays for all valid moves in 7 directions
+	const char dirX[7] = { -1, -1, -1, 0,  1, 1, 1 };
+	const char dirY[7] = { -1,  0,  1, 1, -1, 0, 1 };
 
 	// Get the token type at the given board position
 	// We need to find a sequence of 'ConnectLength' tokens
 	// of this type.
 	const BoardField moveType = board[lastMoveX][lastMoveY];
 
-	// Loop through all 8 directions
-	for (int dir = 0; dir < 8; dir++)
+	// Loop through all 7 directions
+	for (int dir = 0; dir < 7; dir++)
 	{
 		// Get x and y direction moves
-		const int moveDirX = dirX[dir];
-		const int moveDirY = dirY[dir];
+		const char moveDirX = dirX[dir];
+		const char moveDirY = dirY[dir];
 
 		// Counts the number of identical tokens in the current direction
-		int sequenceCounter = 0;
+		unsigned int sequenceCounter = 0;
 
 		// Check 'ConnectLength' of tokens in the current direction
-		for (int dist = 0; dist < ConnectLength; dist++)
+		for (unsigned int dist = 0; dist < ConnectLength; dist++)
 		{
 			// Get position of next token in current direction
 			int x = lastMoveX + (moveDirX * dist);
